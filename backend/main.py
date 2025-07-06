@@ -62,11 +62,10 @@ def chat():
 def health_check():
     return jsonify({'status': 'healthy', 'message': 'Backend is running!'})
 
+@app.route('/', methods=['GET'])
+def home():
+    return jsonify({'message': 'Chat API is running!', 'endpoints': ['/api/chat', '/api/health']})
+
 if __name__ == '__main__':
-    print("🚀 Flask server starting...")
-    print("🔗 API endpoints:")
-    print("   - POST /api/chat - Chat with the bot")
-    print("   - GET /api/health - Health check")
-    print("📱 Frontend should connect to: http://localhost:5000")
-    
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    port = int(os.environ.get('PORT', 5000))  # Use PORT from environment or default to 5000
+    app.run(debug=False, host='0.0.0.0', port=port)  # Set debug=False for production

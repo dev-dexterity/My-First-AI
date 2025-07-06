@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, MessageCircle, Loader2, Settings, X } from 'lucide-react';
-
+import { Send, MessageCircle, Loader2, Settings, X, Menu } from 'lucide-react';
 
 const ChatBot = () => {
   const [messages, setMessages] = useState([]);
@@ -117,54 +116,68 @@ const ChatBot = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center p-4">
-      <div className="w-full max-w-4xl bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center p-2 sm:p-4 md:p-6">
+      <div className="w-full max-w-xs sm:max-w-md md:max-w-2xl lg:max-w-4xl xl:max-w-5xl bg-white/10 backdrop-blur-lg rounded-lg sm:rounded-xl md:rounded-2xl shadow-2xl border border-white/20 overflow-hidden h-[95vh] sm:h-[90vh] md:h-[85vh] flex flex-col">
         {/* Header */}
-        <div className="bg-gradient-to-r from-purple-600 to-blue-600 p-6 text-white">
+        <div className="bg-gradient-to-r from-purple-600 to-blue-600 p-3 sm:p-4 md:p-6 text-white flex-shrink-0">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <MessageCircle className="w-8 h-8" />
-              <div>
-                <h1 className="text-2xl font-bold">Omkar's Groq ChatBot</h1>
-                <p className="text-purple-100 text-sm">Powered by LLaMA 3 via Python Backend</p>
+            <div className="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1">
+              <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 flex-shrink-0" />
+              <div className="min-w-0 flex-1">
+                <h1 className="text-sm sm:text-lg md:text-2xl font-bold truncate">Omkar's Groq ChatBot</h1>
+                <p className="text-purple-100 text-xs sm:text-sm hidden sm:block">Powered by LLaMA 3 via Python Backend</p>
               </div>
             </div>
-            <div className="flex items-center space-x-2">
-              <div className="text-sm">
+            <div className="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
+              {/* Connection Status - Hidden on mobile */}
+              <div className="text-xs sm:text-sm hidden md:block">
                 <span className="text-purple-100">Backend: </span>
                 <span className={getConnectionStatusColor()}>{getConnectionStatusText()}</span>
               </div>
-              <button
-                onClick={() => setShowSettings(!showSettings)}
-                className="p-2 hover:bg-white/20 rounded-lg transition-colors"
-              >
-                <Settings className="w-5 h-5" />
-              </button>
-              <button
-                onClick={clearChat}
-                className="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg transition-colors text-sm"
-              >
-                Clear Chat
-              </button>
+              
+              {/* Mobile menu button */}
+              <div className="flex items-center space-x-1">
+                <button
+                  onClick={() => setShowSettings(!showSettings)}
+                  className="p-1.5 sm:p-2 hover:bg-white/20 rounded-lg transition-colors"
+                  aria-label="Settings"
+                >
+                  <Settings className="w-4 h-4 sm:w-5 sm:h-5" />
+                </button>
+                <button
+                  onClick={clearChat}
+                  className="px-2 py-1.5 sm:px-4 sm:py-2 bg-white/20 hover:bg-white/30 rounded-lg transition-colors text-xs sm:text-sm"
+                >
+                  <span className="hidden sm:inline">Clear Chat</span>
+                  <span className="sm:hidden">Clear</span>
+                </button>
+              </div>
             </div>
+          </div>
+          
+          {/* Mobile connection status */}
+          <div className="mt-2 text-xs md:hidden">
+            <span className="text-purple-100">Backend: </span>
+            <span className={getConnectionStatusColor()}>{getConnectionStatusText()}</span>
           </div>
         </div>
 
         {/* Settings Panel */}
         {showSettings && (
-          <div className="bg-gray-800/50 p-4 border-b border-white/10">
+          <div className="bg-gray-800/50 p-3 sm:p-4 border-b border-white/10 flex-shrink-0">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-white font-semibold">Settings</h3>
+              <h3 className="text-white font-semibold text-sm sm:text-base">Settings</h3>
               <button
                 onClick={() => setShowSettings(false)}
                 className="text-gray-400 hover:text-white"
+                aria-label="Close settings"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
             </div>
             <div className="space-y-3">
               <div>
-                <label className="block text-sm text-gray-300 mb-1">
+                <label className="block text-xs sm:text-sm text-gray-300 mb-1">
                   Backend URL
                 </label>
                 <input
@@ -172,7 +185,7 @@ const ChatBot = () => {
                   value={backendUrl}
                   onChange={(e) => setBackendUrl(e.target.value)}
                   placeholder="http://localhost:5000"
-                  className="w-full p-3 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-purple-500 focus:outline-none"
+                  className="w-full p-2 sm:p-3 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-purple-500 focus:outline-none text-sm"
                 />
                 <p className="text-xs text-gray-400 mt-1">
                   Make sure your Python backend is running on this URL
@@ -180,7 +193,7 @@ const ChatBot = () => {
               </div>
               <button
                 onClick={checkBackendConnection}
-                className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
+                className="px-3 py-2 sm:px-4 sm:py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors text-sm"
               >
                 Test Connection
               </button>
@@ -189,11 +202,11 @@ const ChatBot = () => {
         )}
 
         {/* Chat Messages */}
-        <div className="h-96 overflow-y-auto p-6 space-y-4 bg-gray-900/20">
+        <div className="flex-1 overflow-y-auto p-3 sm:p-4 md:p-6 space-y-3 sm:space-y-4 bg-gray-900/20">
           {messages.length === 0 ? (
-            <div className="text-center text-gray-400 mt-20">
-              <MessageCircle className="w-16 h-16 mx-auto mb-4 opacity-50" />
-              <p className="text-lg font-medium">Start a conversation!</p>
+            <div className="text-center text-gray-400 mt-8 sm:mt-16 md:mt-20">
+              <MessageCircle className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 opacity-50" />
+              <p className="text-base sm:text-lg font-medium">Start a conversation!</p>
               <p className="text-sm">Ask me anything and I'll help you out.</p>
               {connectionStatus !== 'connected' && (
                 <p className="text-red-400 text-sm mt-2">
@@ -208,7 +221,7 @@ const ChatBot = () => {
                 className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 <div
-                  className={`max-w-xs lg:max-w-md xl:max-w-lg px-4 py-3 rounded-2xl ${
+                  className={`max-w-[85%] sm:max-w-[75%] md:max-w-xs lg:max-w-md xl:max-w-lg px-3 py-2 sm:px-4 sm:py-3 rounded-2xl ${
                     message.role === 'user'
                       ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white'
                       : message.isError
@@ -216,7 +229,7 @@ const ChatBot = () => {
                       : 'bg-gray-700/50 text-gray-100 border border-gray-600/30'
                   }`}
                 >
-                  <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                  <p className="text-sm leading-relaxed whitespace-pre-wrap break-words">
                     {message.content}
                   </p>
                 </div>
@@ -225,7 +238,7 @@ const ChatBot = () => {
           )}
           {isLoading && (
             <div className="flex justify-start">
-              <div className="bg-gray-700/50 border border-gray-600/30 px-4 py-3 rounded-2xl">
+              <div className="bg-gray-700/50 border border-gray-600/30 px-3 py-2 sm:px-4 sm:py-3 rounded-2xl">
                 <div className="flex items-center space-x-2 text-gray-300">
                   <Loader2 className="w-4 h-4 animate-spin" />
                   <span className="text-sm">Thinking...</span>
@@ -237,24 +250,25 @@ const ChatBot = () => {
         </div>
 
         {/* Input Area */}
-        <div className="p-6 bg-gray-800/30 border-t border-white/10">
-          <div className="flex space-x-4">
+        <div className="p-3 sm:p-4 md:p-6 bg-gray-800/30 border-t border-white/10 flex-shrink-0">
+          <div className="flex space-x-2 sm:space-x-4">
             <textarea
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="Type your message here..."
-              className="flex-1 p-4 bg-gray-700/50 text-white rounded-xl border border-gray-600 focus:border-purple-500 focus:outline-none resize-none"
-              rows="2"
+              className="flex-1 p-2 sm:p-3 md:p-4 bg-gray-700/50 text-white rounded-xl border border-gray-600 focus:border-purple-500 focus:outline-none resize-none text-sm sm:text-base"
+              rows="1"
               disabled={isLoading}
+              style={{ minHeight: '40px' }}
             />
             <button
               onClick={sendMessage}
               disabled={isLoading || !input.trim() || connectionStatus !== 'connected'}
-              className="px-6 py-4 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl transition-all duration-200 flex items-center space-x-2"
+              className="px-3 py-2 sm:px-4 sm:py-3 md:px-6 md:py-4 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl transition-all duration-200 flex items-center justify-center space-x-1 sm:space-x-2 min-w-[50px] sm:min-w-[80px]"
             >
-              <Send className="w-5 h-5" />
-              <span className="hidden sm:inline">Send</span>
+              <Send className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="hidden sm:inline text-sm">Send</span>
             </button>
           </div>
         </div>
